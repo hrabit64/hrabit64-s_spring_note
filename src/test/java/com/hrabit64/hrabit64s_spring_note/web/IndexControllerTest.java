@@ -1,7 +1,7 @@
 package com.hrabit64.hrabit64s_spring_note.web;
 
 
-import com.hrabit64.hrabit64s_spring_note.config.auth.SecurityConfig;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -20,7 +20,9 @@ public class PostsService {
     //post add
     @Transactional
     public Long add(PostsAddRequestDto postsAddRequestDto){
-        return postsRepository.save(postsAddRequestDto.toEntity()).getPostID();
+        Posts newPost = postsAddRequestDto.toEntity();
+        newPost.setCategory(newPost.getCategory());
+        return postsRepository.save(newPost).getPostID();
     }
 
 
@@ -31,8 +33,8 @@ public class PostsService {
                 .orElseThrow(() -> new IllegalArgumentException("(ID = "+postID+") cannot found......"));
 
         targetPost.update(postsUpdateRequestDto.getTitle(),
-                postsUpdateRequestDto.getMainTag(),
-                postsUpdateRequestDto.getSubTags(),
+                postsUpdateRequestDto.getCategory(),
+                postsUpdateRequestDto.getTags(),
                 postsUpdateRequestDto.getContent());
 
         return postID;
@@ -71,20 +73,20 @@ public class PostsService {
                 .collect(Collectors.toList());
     }
 
-    //find posts By mainTag
+    //find posts By category
     @Transactional(readOnly = true)
-    public List<PostsResponseDto> findByMainTag(String mainTag){
-        return postsRepository.findAllByMainTagOrderByCreatedDateAsc(mainTag).stream()
+    public List<PostsResponseDto> findByCategory(String category){
+        return postsRepository.findAllByCategory_CategoryName(category).stream()
                 .map(PostsResponseDto::new)
                 .collect(Collectors.toList());
     }
 
-    //find posts By mainTag
-    @Transactional(readOnly = true)
-    public List<PostsResponseDto> findBySubTag(String subTag){
-        return postsRepository.findAllBySubTagsOrderByCreatedDateAsc(subTag).stream()
-                .map(PostsResponseDto::new)
-                .collect(Collectors.toList());
+    //post remove
+    @Transactional
+    public Long delPosts(Long postID){
+        Posts targetPost = postsRepository.findById(postID)
+                .orElseThrow(() -> new IllegalArgumentException("(ID = "+postID+") cannot found......"));
+        postsRepository.delete(targetPost);
+        return postID;
     }
-
 }

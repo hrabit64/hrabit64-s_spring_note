@@ -1,9 +1,13 @@
 package com.hrabit64.hrabit64s_spring_note.domain.posts;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.hrabit64.hrabit64s_spring_note.domain.BaseTimeEntity;
+import com.hrabit64.hrabit64s_spring_note.domain.category.Category;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
@@ -13,8 +17,9 @@ import java.util.Set;
 
 @Getter
 @RequiredArgsConstructor
-@Entity
-@Document("POST")
+@JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
+@ToString
+@Document(collection ="posts")
 public class Posts extends BaseTimeEntity {
 
     //게시글의 ID
@@ -30,13 +35,14 @@ public class Posts extends BaseTimeEntity {
 
     //게시글의 대분류
     @NotNull
-    @Column(name = "POST_MAIN_TAG")
-    private String mainTag;
+    @ManyToOne
+    @JoinColumn(name = "CATEGORY_NM")
+    private Category category;
 
     //게시글의 소분류
     @ElementCollection(fetch = FetchType.LAZY)
-    @Column(name = "POST_SUB_TAG")
-    private Set<String> subTags = new HashSet<String>();
+    @Column(name = "POST_TAG")
+    private Set<String> tags = new HashSet<String>();
 
     //게시글 본문
     @NotNull
@@ -48,31 +54,25 @@ public class Posts extends BaseTimeEntity {
     private Integer view = 0;
 
     @Builder
-    public Posts(Long postID, @NotNull String title, @NotNull String mainTag, Set<String> subTags, @NotNull String content, Integer view) {
+    public Posts(Long postID, @NotNull String title, @NotNull Category category,
+                 Set<String> tags, @NotNull String content, Integer view) {
         this.postID = postID;
         this.title = title;
-        this.mainTag = mainTag;
-        this.subTags = subTags;
+        this.category = category;
+        this.tags = tags;
         this.content = content;
         this.view = view;
     }
 
-    public void update(String title, String mainTag, Set<String> subTags, String content){
+    public void update(String title, Category category, Set<String> tags, String content){
         this.title = title;
-        this.mainTag = mainTag;
-        this.subTags = subTags;
+        this.category = category;
+        this.tags = tags;
         this.content = content;
     }
 
-    @Override
-    public String toString() {
-        return "Posts{" +
-                "id=" + postID +
-                ", title='" + title + '\'' +
-                ", mainTag='" + mainTag + '\'' +
-                ", subTags='" + subTags + '\'' +
-                ", content='" + content + '\'' +
-                ", view=" + view +
-                '}';
+    public void setCategory(Category category) {
+        this.category = category;
+        category.getPosts().add(this);
     }
 }

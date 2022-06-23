@@ -1,5 +1,6 @@
 package com.hrabit64.hrabit64s_spring_note.domain.posts;
 
+import com.hrabit64.hrabit64s_spring_note.domain.category.Category;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
@@ -17,8 +18,6 @@ public interface PostsRepository extends MongoRepository<Posts,Long> {
 
     List<Posts> findAllByTitleContainsOrderByCreatedDateAsc(String title);
 
-
-    List<Posts> findAllByMainTagOrderByCreatedDateAsc(String mainTag);
-    List<Posts> findAllBySubTagsOrderByCreatedDateAsc(String subTag);
+    List<Posts> findAllByCategory_CategoryName(String category_categoryName);
     List<Posts> findAllByContentContainsOrderByCreatedDateAsc(String content);
 }

@@ -30,6 +30,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-mustache'
     implementation 'org.mariadb.jdbc:mariadb-java-client'
     implementation  'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation 'org.mongodb:mongo-java-driver'
+
 }
 
 tasks.named('test') {

@@ -1,6 +1,7 @@
 package com.hrabit64.hrabit64s_spring_note.web.dto;
 
 
+import com.hrabit64.hrabit64s_spring_note.domain.category.Category;
 import com.hrabit64.hrabit64s_spring_note.domain.posts.Posts;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,15 +14,15 @@ import java.util.Set;
 public class PostsAddRequestDto {
 
     private String title;
-    private String mainTag;
-    private Set<String> subTags;
+    private Category category;
+    private Set<String> tags;
     private String content;
 
     @Builder
-    public PostsAddRequestDto(String title, String mainTag, Set<String> subTags, String content) {
+    public PostsAddRequestDto(String title, Category category, Set<String> tags, String content) {
         this.title = title;
-        this.mainTag = mainTag;
-        this.subTags = subTags;
+        this.category = category;
+        this.tags = tags;
         this.content = content;
     }
 
@@ -29,8 +30,8 @@ public class PostsAddRequestDto {
         return Posts.builder().
                 title(title).
                 content(content).
-                mainTag(mainTag).
-                subTags(subTags).
+                category(category).
+                tags(tags).
                 build();
     }
 }
