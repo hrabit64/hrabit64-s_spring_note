@@ -7,28 +7,39 @@ import com.hrabit64.hrabit64s_spring_note.domain.posts.Posts;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import org.bson.types.ObjectId;
+import org.hibernate.validator.constraints.UniqueElements;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@ToString
 @RequiredArgsConstructor
-@JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Document(collection ="category")
 
 public class Category extends BaseTimeEntity {
 
     //게시글의 ID
     @Id
-    @Column(name = "CATEGORY_NM")
+    @Field("_id")
+    private ObjectId id;
+
+    @UniqueElements
+    @Field("CATEGORY_CATEGORY_NM")
     private String categoryName;
 
-    @Column(name = "CATEGORY_INDEX")
+    @Field("CATEGORY_INDEX")
     private String index = "입력된 설명이 없습니다!";
 
-    @OneToMany(mappedBy = "category")
+    @DocumentReference(lazy = true)
+    @Field("POSTS")
     private List<Posts> posts = new ArrayList<Posts>();
 
     @Builder

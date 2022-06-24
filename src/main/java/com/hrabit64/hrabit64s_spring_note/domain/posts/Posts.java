@@ -8,7 +8,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,43 +22,39 @@ import java.util.Set;
 @Getter
 @RequiredArgsConstructor
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
-@ToString
 @Document(collection ="posts")
 public class Posts extends BaseTimeEntity {
 
     //게시글의 ID
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "POST_ID")
-    private Long postID;
+    @Field("_id")
+    private ObjectId postID;
 
     //게시글의 제목
     @NotNull
-    @Column(name = "POST_TITLE")
+    @Field("POST_TITLE")
     private String title;
 
     //게시글의 대분류
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "CATEGORY_NM")
+    @DocumentReference(lazy = true)
+    @Field("CATEGORY_CATEGORY_NM")
     private Category category;
 
     //게시글의 소분류
     @ElementCollection(fetch = FetchType.LAZY)
-    @Column(name = "POST_TAG")
+    @Field("POST_TAG")
     private Set<String> tags = new HashSet<String>();
 
     //게시글 본문
-    @NotNull
-    @Column(name = "POST_CONTENT")
+    @Field("POST_CONTENT")
     private String content;
 
     //게시글 조회수, 기본값은 0
-    @Column(name = "POST_VIEW")
+    @Field("POST_VIEW")
     private Integer view = 0;
 
     @Builder
-    public Posts(Long postID, @NotNull String title, @NotNull Category category,
+    public Posts(ObjectId postID, @NotNull String title, @NotNull Category category,
                  Set<String> tags, @NotNull String content, Integer view) {
         this.postID = postID;
         this.title = title;
@@ -71,8 +71,7 @@ public class Posts extends BaseTimeEntity {
         this.content = content;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-        category.getPosts().add(this);
+    public void setCategory() {
+        this.category.getPosts().add(this);
     }
 }

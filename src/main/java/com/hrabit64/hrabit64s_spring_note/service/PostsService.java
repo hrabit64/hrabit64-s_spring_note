@@ -6,6 +6,9 @@ import com.hrabit64.hrabit64s_spring_note.web.dto.PostsAddRequestDto;
 import com.hrabit64.hrabit64s_spring_note.web.dto.PostsResponseDto;
 import com.hrabit64.hrabit64s_spring_note.web.dto.PostsUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,20 +19,20 @@ import java.util.stream.Collectors;
 @Service
 public class PostsService {
     private final PostsRepository postsRepository;
-
     //post add
     @Transactional
-    public Long add(PostsAddRequestDto postsAddRequestDto){
+    public ObjectId add(PostsAddRequestDto postsAddRequestDto){
         Posts newPost = postsAddRequestDto.toEntity();
-        newPost.setCategory(newPost.getCategory());
+
+        newPost.setCategory();
         return postsRepository.save(newPost).getPostID();
     }
 
 
     //post update
     @Transactional
-    public Long update(Long postID,PostsUpdateRequestDto postsUpdateRequestDto){
-        Posts targetPost = postsRepository.findById(postID)
+    public ObjectId update(ObjectId postID, PostsUpdateRequestDto postsUpdateRequestDto){
+        Posts targetPost = postsRepository.findByPostID(postID)
                 .orElseThrow(() -> new IllegalArgumentException("(ID = "+postID+") cannot found......"));
 
         targetPost.update(postsUpdateRequestDto.getTitle(),
@@ -51,8 +54,8 @@ public class PostsService {
 
     //find post by postID
     @Transactional(readOnly = true)
-    public PostsResponseDto findByPostID(Long postID){
-        Posts targetPost = postsRepository.findById(postID)
+    public PostsResponseDto findByPostID(ObjectId postID){
+        Posts targetPost = postsRepository.findByPostID(postID)
                 .orElseThrow(() -> new IllegalArgumentException("(ID = "+postID+") cannot found......"));
         return new PostsResponseDto(targetPost);
     }
@@ -83,8 +86,8 @@ public class PostsService {
 
     //post remove
     @Transactional
-    public Long delPosts(Long postID){
-        Posts targetPost = postsRepository.findById(postID)
+    public ObjectId delPosts(ObjectId postID){
+        Posts targetPost = postsRepository.findByPostID(postID)
                 .orElseThrow(() -> new IllegalArgumentException("(ID = "+postID+") cannot found......"));
         postsRepository.delete(targetPost);
         return postID;
