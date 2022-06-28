@@ -15,9 +15,11 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 @NoArgsConstructor
 public class CategoryUpdateRequestDto {
+
     @NotEmpty
     private String categoryName;
     private String index;
+
     @Builder
     public CategoryUpdateRequestDto(String categoryName, String index){
 

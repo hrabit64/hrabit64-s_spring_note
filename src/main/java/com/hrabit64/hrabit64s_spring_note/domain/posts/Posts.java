@@ -1,77 +1,116 @@
 package com.hrabit64.hrabit64s_spring_note.domain.posts;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.hrabit64.hrabit64s_spring_note.domain.BaseTimeEntity;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hrabit64.hrabit64s_spring_note.domain.category.Category;
+import com.hrabit64.hrabit64s_spring_note.service.CategoryService;
+import com.hrabit64.hrabit64s_spring_note.web.dto.PostsUpdateRequestDto;
+import com.mongodb.lang.NonNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.mapping.DBRef;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.convert.ReadingConverter;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.*;
+
+import javax.persistence.ElementCollection;
+import javax.persistence.FetchType;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Getter
+@ToString
 @RequiredArgsConstructor
-@JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Document(collection ="posts")
-public class Posts extends BaseTimeEntity {
+public class Posts{
 
-    //게시글의 ID
+    @Transient
+    public static final String SEQUENCE_NAME = "posts_sequence";
+
+
+    /**
+     * post's id
+     */
     @Id
-    @Field("_id")
-    private ObjectId postID;
+    private Long postID;
 
-    //게시글의 제목
-    @NotNull
+    /**
+     * post's title
+     */
     @Field("POST_TITLE")
     private String title;
 
-    //게시글의 대분류
-    @DocumentReference(lazy = true)
-    @Field("CATEGORY_CATEGORY_NM")
-    private Category category;
+    /**
+     * post's category's id
+     */
+    @Field("CATEGORY_CATEGORY_ID")
+    private String categoryID;
 
-    //게시글의 소분류
+    /**
+     * post's tags
+     */
     @ElementCollection(fetch = FetchType.LAZY)
     @Field("POST_TAG")
     private Set<String> tags = new HashSet<String>();
 
-    //게시글 본문
+    /**
+     * post's contents
+     */
     @Field("POST_CONTENT")
     private String content;
 
-    //게시글 조회수, 기본값은 0
+    /**
+     * post's view, default value is 0
+     */
     @Field("POST_VIEW")
     private Integer view = 0;
 
+    @Field("POST_CREATE_DATE")
+    private LocalDateTime createdDateTime;
+
+
     @Builder
-    public Posts(ObjectId postID, @NotNull String title, @NotNull Category category,
+    public Posts(Long postID,@NotNull String title, @NotNull String categoryID,
                  Set<String> tags, @NotNull String content, Integer view) {
         this.postID = postID;
         this.title = title;
-        this.category = category;
         this.tags = tags;
         this.content = content;
         this.view = view;
+        this.categoryID = categoryID;
     }
 
-    public void update(String title, Category category, Set<String> tags, String content){
+
+    public void update(String title, String categoryID, Set<String> tags, String content){
         this.title = title;
-        this.category = category;
+        this.categoryID = categoryID;
         this.tags = tags;
         this.content = content;
     }
 
-    public void setCategory() {
-        this.category.getPosts().add(this);
+    public void update(PostsUpdateRequestDto postsUpdateRequestDto){
+        this.title = postsUpdateRequestDto.getTitle();
+        this.categoryID = postsUpdateRequestDto.getCategoryID();
+        this.tags = postsUpdateRequestDto.getTags();
+        this.content = postsUpdateRequestDto.getContent();
     }
+    public void setCategoryID(String categoryID){
+        this.categoryID = categoryID;
+    }
+    public void setCreatedDateTime(LocalDateTime createdDateTime){this.createdDateTime = createdDateTime;}
+
 }

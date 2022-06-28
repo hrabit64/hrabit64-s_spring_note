@@ -3,13 +3,12 @@ package com.hrabit64.hrabit64s_spring_note.web.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.hrabit64.hrabit64s_spring_note.domain.category.Category;
 import com.hrabit64.hrabit64s_spring_note.domain.posts.Posts;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.bson.types.ObjectId;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -17,18 +16,17 @@ import java.util.Set;
 @ToString
 @Getter
 @NoArgsConstructor
-public class PostsResponseDto {
+public class CategoryPostsResponseDto {
 
     private Long postID;
     private String title;
-    private String categoryName;
     private Set<String> tags;
     private String content;
     private Integer view;
     private LocalDateTime createdDateTime;
 
     @Builder
-    public PostsResponseDto(Posts posts) {
+    public CategoryPostsResponseDto(Posts posts) {
 
         this.postID = posts.getPostID();
         this.title = posts.getTitle();
@@ -38,7 +36,4 @@ public class PostsResponseDto {
         this.createdDateTime = posts.getCreatedDateTime();
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
 }

@@ -6,90 +6,85 @@ import com.hrabit64.hrabit64s_spring_note.web.dto.PostsAddRequestDto;
 import com.hrabit64.hrabit64s_spring_note.web.dto.PostsResponseDto;
 import com.hrabit64.hrabit64s_spring_note.web.dto.PostsUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class PostsService {
+
+    @Autowired
     private final PostsRepository postsRepository;
-    //post add
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
+    /**
+     * add new post
+     * @param postsAddRequestDto new post info
+     * @return new post's id
+     */
     @Transactional
-    public ObjectId add(PostsAddRequestDto postsAddRequestDto){
+    public Long add(PostsAddRequestDto postsAddRequestDto){
         Posts newPost = postsAddRequestDto.toEntity();
-
-        newPost.setCategory();
-        return postsRepository.save(newPost).getPostID();
+        newPost.setCreatedDateTime(LocalDateTime.now());
+        return postsRepository.addPosts(newPost);
     }
 
 
-    //post update
-    @Transactional
-    public ObjectId update(ObjectId postID, PostsUpdateRequestDto postsUpdateRequestDto){
-        Posts targetPost = postsRepository.findByPostID(postID)
-                .orElseThrow(() -> new IllegalArgumentException("(ID = "+postID+") cannot found......"));
-
-        targetPost.update(postsUpdateRequestDto.getTitle(),
-                postsUpdateRequestDto.getCategory(),
-                postsUpdateRequestDto.getTags(),
-                postsUpdateRequestDto.getContent());
-
-        return postID;
-    }
-
-    //find all post
+    /**
+     * find all post
+     * @return posts info
+     */
     @Transactional(readOnly = true)
     public List<PostsResponseDto> findAllPosts(){
-        return postsRepository.findAllByOrderByCreatedDateAsc().stream()
+        return postsRepository.findAllBy().stream()
                 .map(PostsResponseDto::new)
                 .collect(Collectors.toList());
     }
 
 
-    //find post by postID
+    /**
+     * find post by post id
+     * @param postID target post id
+     * @return post info
+     */
     @Transactional(readOnly = true)
-    public PostsResponseDto findByPostID(ObjectId postID){
-        Posts targetPost = postsRepository.findByPostID(postID)
-                .orElseThrow(() -> new IllegalArgumentException("(ID = "+postID+") cannot found......"));
-        return new PostsResponseDto(targetPost);
+    public PostsResponseDto findByPostID(Long postID){
+
+        Posts targetPost = postsRepository.findByPostID(postID);
+        PostsResponseDto responsePost = new PostsResponseDto(targetPost);
+        responsePost.setCategoryName(postsRepository.findCategoryByCategoryID(targetPost.getCategoryID()).getCategoryName());
+        return responsePost;
     }
 
-    //find posts By title
-    @Transactional(readOnly = true)
-    public List<PostsResponseDto> findByTitle(String title){
-        return postsRepository.findAllByTitleContainsOrderByCreatedDateAsc(title).stream()
-                .map(PostsResponseDto::new)
-                .collect(Collectors.toList());
-    }
-
-    //find posts By content
-    @Transactional(readOnly = true)
-    public List<PostsResponseDto> findByContent(String content){
-        return postsRepository.findAllByContentContainsOrderByCreatedDateAsc(content).stream()
-                .map(PostsResponseDto::new)
-                .collect(Collectors.toList());
-    }
-
-    //find posts By category
-    @Transactional(readOnly = true)
-    public List<PostsResponseDto> findByCategory(String category){
-        return postsRepository.findAllByCategory_CategoryName(category).stream()
-                .map(PostsResponseDto::new)
-                .collect(Collectors.toList());
-    }
-
-    //post remove
+    /**
+     * delete post
+     * @param postID target post
+     */
     @Transactional
-    public ObjectId delPosts(ObjectId postID){
-        Posts targetPost = postsRepository.findByPostID(postID)
-                .orElseThrow(() -> new IllegalArgumentException("(ID = "+postID+") cannot found......"));
-        postsRepository.delete(targetPost);
-        return postID;
+    public void delPostByPostID(Long postID){
+        Posts targetPost = postsRepository.findByPostID(postID);
+        postsRepository.delPosts(targetPost);
     }
+
+    @Transactional
+    public Long updatePost(Long postID,PostsUpdateRequestDto postsUpdateRequestDto){
+        Posts targetPost = postsRepository.findByPostID(postID);
+        String beforeCategory =
+                (targetPost.getCategoryID().equals(postsUpdateRequestDto.getCategoryID()))?
+                null : targetPost.getCategoryID();
+
+        targetPost.update(postsUpdateRequestDto);
+        if(beforeCategory != null) return postsRepository.updatePosts(targetPost,beforeCategory).getPostID();
+        return postsRepository.updatePosts(targetPost).getPostID();
+    }
+
+
 }

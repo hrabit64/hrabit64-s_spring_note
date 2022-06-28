@@ -1,18 +1,20 @@
 package com.hrabit64.hrabit64s_spring_note.web;
 
 import com.hrabit64.hrabit64s_spring_note.service.CategoryService;
-import com.hrabit64.hrabit64s_spring_note.service.PostsService;
 import com.hrabit64.hrabit64s_spring_note.web.dto.CategoryAddRequestDto;
+import com.hrabit64.hrabit64s_spring_note.web.dto.CategoryPostsResponseDto;
 import com.hrabit64.hrabit64s_spring_note.web.dto.CategoryResponseDto;
 import com.hrabit64.hrabit64s_spring_note.web.dto.CategoryUpdateRequestDto;
-import com.hrabit64.hrabit64s_spring_note.web.dto.PostsResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 
@@ -21,40 +23,130 @@ import java.util.List;
 @RequestMapping("/api/v1/category")
 public class CategoryApiController {
 
+    @Autowired
     private final CategoryService categoryService;
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping
-    public List<CategoryResponseDto> findAllCategory(){
+    public ResponseEntity<List<CategoryResponseDto>> findAllCategory(){
 
-        return categoryService.findAllCategory();
+        logger.info("GET");
+        List<CategoryResponseDto> categoryResponseDto;
+        try {
+            categoryResponseDto = categoryService.findAllCategory();
+        } catch (NullPointerException nullPointerException){
+            logger.info("can't find category......");
+            return new ResponseEntity<List<CategoryResponseDto>>(null,null, HttpStatus.NOT_FOUND);
+        } catch (Exception e){
+            logger.error("INTERNAL SERVER ERROR! {}",e.toString());
+            return new ResponseEntity<List<CategoryResponseDto>>(null,null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<List<CategoryResponseDto>>(categoryResponseDto,null,HttpStatus.OK);
+
     }
 
+    @GetMapping("{categoryName}/posts")
+    public ResponseEntity<List<CategoryPostsResponseDto>> findPostsByCategoryName(@PathVariable String categoryName){
+        logger.info("GET {} 's posts",categoryName);
+        List<CategoryPostsResponseDto> categoryPostsResponseDto;
+        try {
+            categoryPostsResponseDto = categoryService.findPostsByCategoryName(categoryName);
+        } catch (NullPointerException nullPointerException){
+            logger.info("can't find category...... request category name {}",categoryName);
+            return new ResponseEntity<List<CategoryPostsResponseDto>>(null,null, HttpStatus.NOT_FOUND);
+        } catch (Exception e){
+            logger.error("INTERNAL SERVER ERROR! {}",e.toString());
+            return new ResponseEntity<List<CategoryPostsResponseDto>>(null,null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<List<CategoryPostsResponseDto>>(categoryPostsResponseDto,null,HttpStatus.OK);
+
+    }
     @GetMapping("{categoryName}")
-    public CategoryResponseDto findByCategoryName(@PathVariable String categoryName){
-        return new CategoryResponseDto(categoryService.findByCategoryName(categoryName));
+    public ResponseEntity<CategoryResponseDto> findByCategoryName(@PathVariable String categoryName){
+        logger.info("GET {}",categoryName);
+        CategoryResponseDto categoryResponseDto;
+        try {
+            categoryResponseDto = categoryService.findByCategoryName(categoryName);
+        } catch (NullPointerException nullPointerException){
+            logger.info("can't find category...... request category name {}",categoryName);
+            return new ResponseEntity<CategoryResponseDto>(null,null, HttpStatus.NOT_FOUND);
+        } catch (Exception e){
+            logger.error("INTERNAL SERVER ERROR! {}",e.toString());
+            return new ResponseEntity<CategoryResponseDto>(null,null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<CategoryResponseDto>(categoryResponseDto,null,HttpStatus.OK);
 
     }
 
     @PostMapping
-    public String addCategory(@RequestBody @Validated CategoryAddRequestDto categoryAddRequestDto){
-        logger.debug("POST// {}",categoryAddRequestDto.toString());
-        return categoryService.add(categoryAddRequestDto);
+    public ResponseEntity<String> addCategory
+            (@RequestBody @Validated CategoryAddRequestDto categoryAddRequestDto, BindingResult bindingResult){
+
+        logger.debug("POST {}",categoryAddRequestDto.toString());
+
+        if(bindingResult.hasErrors()) return new ResponseEntity<String>(null,null, HttpStatus.BAD_REQUEST);
+
+        String categoryName;
+
+        try {
+            categoryName = categoryService.add(categoryAddRequestDto);
+        } catch (Exception e){
+            logger.error("INTERNAL SERVER ERROR! {}",e.toString());
+            return new ResponseEntity<String>(null,null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<String>(categoryName,null, HttpStatus.OK);
 
     }
 
     @PutMapping("{categoryName}")
-    public String updateCategory(@PathVariable String categoryName,
-                                 @RequestBody CategoryUpdateRequestDto categoryUpdateRequestDto){
+    public ResponseEntity<String> updateCategory
+            (@PathVariable String categoryName,
+             @RequestBody @Validated CategoryUpdateRequestDto categoryUpdateRequestDto, BindingResult bindingResult){
 
-        return categoryService.update(categoryName,categoryUpdateRequestDto);
+        logger.debug("PUT {}",categoryUpdateRequestDto.toString());
+
+        if(bindingResult.hasErrors()) return new ResponseEntity<String>(null,null, HttpStatus.BAD_REQUEST);
+
+        String newCategoryName;
+
+        try {
+            newCategoryName = categoryService.updateCategory(categoryName,categoryUpdateRequestDto);
+        } catch (NullPointerException nullPointerException) {
+            logger.info("can't find category...... request category name {}", categoryName);
+            return new ResponseEntity<String>(null, null, HttpStatus.NOT_FOUND);
+        }
+        catch (Exception e){
+            logger.error("INTERNAL SERVER ERROR! {}",e.toString());
+            return new ResponseEntity<String>(null,null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<String>(newCategoryName,null, HttpStatus.OK);
 
     }
 
     @DeleteMapping("{categoryName}")
-    public String delCategory(@PathVariable String categoryName){
+    public ResponseEntity<String> delCategory (@PathVariable String categoryName) {
+        logger.debug("DELETE {}",categoryName);
 
-        return categoryService.delete(categoryName);
+        try {
+            categoryService.delCategory(categoryName);
+        } catch (NullPointerException nullPointerException) {
+            logger.info("can't find category...... request category name {}", categoryName);
+            return new ResponseEntity<String>(null, null, HttpStatus.NOT_FOUND);
+        }
+        catch (IllegalArgumentException illegalArgumentException) {
+            logger.info("can't delete {}! it has some posts", categoryName);
+            return new ResponseEntity<String>("Target category has some posts", null, HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e){
+            logger.error("INTERNAL SERVER ERROR! {}",e.toString());
+            return new ResponseEntity<String>(null,null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<String>(categoryName,null, HttpStatus.OK);
 
     }
+
 }

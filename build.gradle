@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.7.RELEASE'
+    id 'org.springframework.boot' version '2.7.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
 }
@@ -30,13 +30,16 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-mustache'
     implementation 'org.mariadb.jdbc:mariadb-java-client'
     implementation  'org.springframework.boot:spring-boot-starter-data-mongodb'
-    implementation 'org.mongodb:mongo-java-driver'
+//    implementation 'org.mongodb:mongo-java-driver'
     implementation 'org.slf4j:slf4j-api:1.7.36'
     testImplementation 'ch.qos.logback:logback-classic:1.2.11'
+    implementation 'org.springframework.data:spring-data-commons:2.7.1'
     implementation 'org.slf4j:jcl-over-slf4j:1.7.36'
-    implementation 'org.springframework.data:spring-data-mongodb:3.4.0'
+    implementation 'org.springframework.data:spring-data-mongodb:3.3.0'
     implementation 'javax.validation:validation-api:2.0.1.Final'
     implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 
 
 }
