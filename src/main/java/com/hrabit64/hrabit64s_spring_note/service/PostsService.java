@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,9 +45,14 @@ public class PostsService {
      */
     @Transactional(readOnly = true)
     public List<PostsResponseDto> findAllPosts(){
-        return postsRepository.findAllBy().stream()
-                .map(PostsResponseDto::new)
-                .collect(Collectors.toList());
+        List<Posts> posts = postsRepository.findAllBy();
+        List<PostsResponseDto> returnPosts = new ArrayList<PostsResponseDto>();
+        for (Posts targetPost: posts) {
+            PostsResponseDto indexPost = new PostsResponseDto(targetPost);
+            indexPost.setCategoryName(postsRepository.findCategoryByCategoryID(targetPost.getCategoryID()).getCategoryName());
+            returnPosts.add(indexPost);
+        }
+        return returnPosts;
     }
 
 

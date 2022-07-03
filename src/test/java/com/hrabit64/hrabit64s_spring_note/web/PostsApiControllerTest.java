@@ -108,10 +108,13 @@ class PostsApiControllerTest {
 
         postsRepository.addPosts(testPost2);
 
-
+        PostsResponseDto testCase1 = new PostsResponseDto(testPost1);
+        testCase1.setCategoryName("test");
+        PostsResponseDto testCase2 = new PostsResponseDto(testPost2);
+        testCase2.setCategoryName("test");
         List<PostsResponseDto> testCase = new ArrayList<PostsResponseDto>();
-        testCase.add(new PostsResponseDto(testPost1));
-        testCase.add(new PostsResponseDto(testPost2));
+        testCase.add(testCase1);
+        testCase.add(testCase2);
 
         logger.debug("given // {} \n {}",testPost1.toString(),testPost2.toString());
 
