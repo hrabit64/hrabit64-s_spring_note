@@ -4,7 +4,7 @@
 
 사용환경</br>
 
-java 17</br>
+java 8</br>
 Spring (2.7.0)</br>
-Vue.js</br>
+React</br>
 MongoDB</br>
