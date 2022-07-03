@@ -1,38 +1,23 @@
 package com.hrabit64.hrabit64s_spring_note.domain.posts;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.hrabit64.hrabit64s_spring_note.domain.category.Category;
-import com.hrabit64.hrabit64s_spring_note.service.CategoryService;
 import com.hrabit64.hrabit64s_spring_note.web.dto.PostsUpdateRequestDto;
-import com.mongodb.lang.NonNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.converter.Converter;
+
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.convert.ReadingConverter;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 
-import javax.persistence.ElementCollection;
-import javax.persistence.FetchType;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Getter
+@Setter
 @ToString
 @RequiredArgsConstructor
 @Document(collection ="posts")
@@ -63,7 +48,6 @@ public class Posts{
     /**
      * post's tags
      */
-    @ElementCollection(fetch = FetchType.LAZY)
     @Field("POST_TAG")
     private Set<String> tags = new HashSet<String>();
 

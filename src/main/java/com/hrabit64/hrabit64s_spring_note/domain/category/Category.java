@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hrabit64.hrabit64s_spring_note.domain.posts.Posts;
 import com.hrabit64.hrabit64s_spring_note.service.CategoryService;
 import com.mongodb.lang.NonNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +23,7 @@ import java.util.List;
 
 
 @Getter
+@Setter
 @ToString
 @RequiredArgsConstructor
 @Document(collection ="category")
@@ -57,5 +55,8 @@ public class Category{
         this.index = index;
     }
 
-}
+    public void setCategoryID(String categoryID){
+        this.categoryID = categoryID;
+    }
 
+}

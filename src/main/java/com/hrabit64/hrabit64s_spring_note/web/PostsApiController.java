@@ -1,15 +1,12 @@
 package com.hrabit64.hrabit64s_spring_note.web;
 
 import com.hrabit64.hrabit64s_spring_note.domain.posts.Posts;
-import com.hrabit64.hrabit64s_spring_note.service.CategoryService;
 import com.hrabit64.hrabit64s_spring_note.service.PostsService;
 import com.hrabit64.hrabit64s_spring_note.service.SequenceGeneratorService;
-import com.hrabit64.hrabit64s_spring_note.web.dto.CategoryPostsResponseDto;
 import com.hrabit64.hrabit64s_spring_note.web.dto.PostsAddRequestDto;
 import com.hrabit64.hrabit64s_spring_note.web.dto.PostsResponseDto;
 import com.hrabit64.hrabit64s_spring_note.web.dto.PostsUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

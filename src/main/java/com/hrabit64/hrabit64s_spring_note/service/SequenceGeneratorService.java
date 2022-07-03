@@ -8,8 +8,11 @@ import java.util.Objects;
 
 import com.hrabit64.hrabit64s_spring_note.domain.databaseSequence.DatabaseSequence;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,9 @@ public class SequenceGeneratorService {
 
     @Autowired
     private final MongoOperations mongoOperations;
+
+    @Autowired
+    private final MongoTemplate mongoTemplate;
 
     /**
      * create document id
@@ -32,6 +38,10 @@ public class SequenceGeneratorService {
                 DatabaseSequence.class);
         return !Objects.isNull(counter) ? counter.getSeq() : 1;
 
+    }
+    public void resetSequence(String seqName){
+        Query query = new Query(where("_id").is(seqName));
+        mongoTemplate.remove(query,"database_sequences");
     }
 
 }

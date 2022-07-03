@@ -86,5 +86,8 @@ public class PostsService {
         return postsRepository.updatePosts(targetPost).getPostID();
     }
 
-
+    @Transactional
+    public void delAllPosts(){
+        postsRepository.delAllPosts();
+    }
 }

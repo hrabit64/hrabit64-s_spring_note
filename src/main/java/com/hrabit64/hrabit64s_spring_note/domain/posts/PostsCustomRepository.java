@@ -10,5 +10,5 @@ public interface PostsCustomRepository {
     void delPosts(Posts posts);
     Posts updatePosts(Posts newPosts);
     Posts updatePosts(Posts newPosts,String beforeCategoryID);
-
+    void delAllPosts();
 }

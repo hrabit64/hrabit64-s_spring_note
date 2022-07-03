@@ -1,15 +1,12 @@
 package com.hrabit64.hrabit64s_spring_note.domain.category;
 
 import com.hrabit64.hrabit64s_spring_note.domain.posts.Posts;
-import com.hrabit64.hrabit64s_spring_note.web.dto.CategoryUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.*;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
@@ -84,6 +81,10 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
         Query query = new Query(where("_id").is(new ObjectId(category.getCategoryID())));
         mongoTemplate.remove(query,Category.class);
 
+    }
+
+    public void delAllCategory(){
+        mongoTemplate.remove(new Query(),Category.class);
     }
 
 }

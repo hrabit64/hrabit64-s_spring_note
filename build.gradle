@@ -14,10 +14,10 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'com.h2database:h2'
-    implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+    implementation 'org.testng:testng:7.1.0'
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'junit:junit:4.12'
     testImplementation 'junit:junit:4.12'
@@ -30,7 +30,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-mustache'
     implementation 'org.mariadb.jdbc:mariadb-java-client'
     implementation  'org.springframework.boot:spring-boot-starter-data-mongodb'
-//    implementation 'org.mongodb:mongo-java-driver'
     implementation 'org.slf4j:slf4j-api:1.7.36'
     testImplementation 'ch.qos.logback:logback-classic:1.2.11'
     implementation 'org.springframework.data:spring-data-commons:2.7.1'
@@ -40,7 +39,9 @@ dependencies {
     implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
     implementation 'io.springfox:springfox-swagger-ui:3.0.0'
-
+    testImplementation 'org.junit.vintage:junit-vintage-engine:5.8.2'
+//    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+//    implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring:1.1.1-spring27-SNAPSHOT'
 
 }
 

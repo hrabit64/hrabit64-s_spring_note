@@ -119,4 +119,7 @@ public class PostsCustomRepositoryImpl implements PostsCustomRepository {
 
         return newPosts;
     }
+    public void delAllPosts(){
+        mongoTemplate.remove(new Query(),Posts.class);
+    }
 }

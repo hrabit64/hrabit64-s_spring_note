@@ -85,4 +85,9 @@ public class CategoryService {
         if(targetCategory.getPostsID().size() != 0) throw new IllegalArgumentException();
         categoryRepository.delCategory(targetCategory);
     }
+
+    @Transactional
+    public void delAllCategory(){
+        categoryRepository.delAllCategory();
+    }
 }
