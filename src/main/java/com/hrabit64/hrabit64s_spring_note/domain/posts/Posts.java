@@ -1,7 +1,7 @@
 package com.hrabit64.hrabit64s_spring_note.domain.posts;
 
 
-import com.hrabit64.hrabit64s_spring_note.web.dto.PostsUpdateRequestDto;
+import com.hrabit64.hrabit64s_spring_note.web.dto.posts.PostsUpdateRequestDto;
 import lombok.*;
 
 
@@ -69,7 +69,7 @@ public class Posts{
 
     @Builder
     public Posts(Long postID,@NotNull String title, @NotNull String categoryID,
-                 Set<String> tags, @NotNull String content, Integer view) {
+                 Set<String> tags, @NotNull String content, Integer view,String thumbnail) {
         this.postID = postID;
         this.title = title;
         this.tags = tags;
@@ -79,7 +79,7 @@ public class Posts{
     }
 
 
-    public void update(String title, String categoryID, Set<String> tags, String content){
+    public void update(String title, String categoryID, Set<String> tags, String content,String thumbnail){
         this.title = title;
         this.categoryID = categoryID;
         this.tags = tags;

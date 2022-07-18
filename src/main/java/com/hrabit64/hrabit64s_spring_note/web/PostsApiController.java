@@ -3,22 +3,21 @@ package com.hrabit64.hrabit64s_spring_note.web;
 import com.hrabit64.hrabit64s_spring_note.domain.posts.Posts;
 import com.hrabit64.hrabit64s_spring_note.service.PostsService;
 import com.hrabit64.hrabit64s_spring_note.service.SequenceGeneratorService;
-import com.hrabit64.hrabit64s_spring_note.web.dto.PostsAddRequestDto;
-import com.hrabit64.hrabit64s_spring_note.web.dto.PostsResponseDto;
-import com.hrabit64.hrabit64s_spring_note.web.dto.PostsUpdateRequestDto;
+import com.hrabit64.hrabit64s_spring_note.utils.MarkdownConverter;
+import com.hrabit64.hrabit64s_spring_note.web.dto.posts.PostsAddRequestDto;
+import com.hrabit64.hrabit64s_spring_note.web.dto.posts.PostsResponseDto;
+import com.hrabit64.hrabit64s_spring_note.web.dto.posts.PostsUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -27,6 +26,9 @@ public class PostsApiController {
 
     @Autowired
     private final PostsService postsService;
+
+    @Autowired
+    private final MarkdownConverter markdownConverter;
 
     @Autowired
     private final SequenceGeneratorService sequenceGeneratorService;
@@ -73,7 +75,7 @@ public class PostsApiController {
             (@RequestBody @Valid PostsAddRequestDto postsAddRequestDto, BindingResult bindingResult){
 
         logger.info("POST Posts {}",postsAddRequestDto.toString());
-
+        postsAddRequestDto.setContent(markdownConverter.convert(postsAddRequestDto.getContent()));
         if(bindingResult.hasErrors()) return new ResponseEntity<Long>(null,null, HttpStatus.BAD_REQUEST);
 
         Long postID;

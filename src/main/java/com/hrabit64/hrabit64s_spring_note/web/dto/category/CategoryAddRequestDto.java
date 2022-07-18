@@ -1,4 +1,4 @@
-package com.hrabit64.hrabit64s_spring_note.web.dto;
+package com.hrabit64.hrabit64s_spring_note.web.dto.category;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -14,14 +14,14 @@ import javax.validation.constraints.NotEmpty;
 @ToString
 @Getter
 @NoArgsConstructor
-public class CategoryUpdateRequestDto {
+public class CategoryAddRequestDto {
 
     @NotEmpty
     private String categoryName;
     private String index;
 
     @Builder
-    public CategoryUpdateRequestDto(String categoryName, String index){
+    public CategoryAddRequestDto(String categoryName,String index){
 
         this.categoryName = categoryName;
         this.index = index;

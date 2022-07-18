@@ -16,8 +16,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'com.h2database:h2'
-    implementation 'org.testng:testng:7.1.0'
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'junit:junit:4.12'
     testImplementation 'junit:junit:4.12'
@@ -25,10 +23,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.springframework.security:spring-security-test"
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-mustache'
     implementation 'org.springframework.session:spring-session-jdbc'
-    testImplementation 'org.springframework.boot:spring-boot-starter-mustache'
-    implementation 'org.mariadb.jdbc:mariadb-java-client'
     implementation  'org.springframework.boot:spring-boot-starter-data-mongodb'
     implementation 'org.slf4j:slf4j-api:1.7.36'
     testImplementation 'ch.qos.logback:logback-classic:1.2.11'
@@ -40,9 +35,11 @@ dependencies {
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
     implementation 'io.springfox:springfox-swagger-ui:3.0.0'
     testImplementation 'org.junit.vintage:junit-vintage-engine:5.8.2'
-//    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
-//    implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring:1.1.1-spring27-SNAPSHOT'
-
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.commonmark:commonmark:0.19.0'
+    runtimeOnly 'com.h2database:h2:2.1.214'
 }
 
 tasks.named('test') {

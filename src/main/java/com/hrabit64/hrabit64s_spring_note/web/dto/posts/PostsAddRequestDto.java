@@ -1,4 +1,4 @@
-package com.hrabit64.hrabit64s_spring_note.web.dto;
+package com.hrabit64.hrabit64s_spring_note.web.dto.posts;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -15,11 +15,13 @@ import java.util.Set;
 @ToString
 @Getter
 @NoArgsConstructor
-public class PostsUpdateRequestDto {
+public class PostsAddRequestDto {
 
+    private Long postID;
 
     @NotEmpty
     private String title;
+
 
     @NotEmpty
     private String categoryID;
@@ -29,13 +31,23 @@ public class PostsUpdateRequestDto {
     private String content;
 
     @Builder
-    public PostsUpdateRequestDto(String title, String categoryID, Set<String> tags, String content) {
+    public PostsAddRequestDto(String title, String categoryID, Set<String> tags, String content,String thumbnail) {
         this.title = title;
         this.categoryID = categoryID;
         this.tags = tags;
         this.content = content;
     }
 
-
-
+    public void setPostID(Long postID) {this.postID = postID;}
+    public void setContent(String content) {this.content = content;}
+    public Posts toEntity(){
+        return Posts.builder().
+                postID(postID).
+                categoryID(categoryID).
+                title(title).
+                content(content).
+                tags(tags).
+                view(0).
+                build();
+    }
 }

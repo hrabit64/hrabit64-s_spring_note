@@ -73,6 +73,7 @@ public class CategoryCustomRepositoryImpl implements CategoryCustomRepository {
         Update update = new Update();
         update.set("CATEGORY_CATEGORY_NM",newCategory.getCategoryName());
         update.set("CATEGORY_INDEX",newCategory.getIndex());
+        update.set("POST_POST_ID",newCategory.getPostsID());
         mongoTemplate.updateFirst(query,update,Category.class);
         return newCategory;
     }

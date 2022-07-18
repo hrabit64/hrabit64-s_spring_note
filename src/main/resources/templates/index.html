@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="fragments/header-main.html :: head" />
+<body>
+<div class="container-fluid">
+
+    <div class="row px-4 py-5 my-lg-5 mx-md-5">
+
+        <div class="col-md-12">
+            <div class="jumbotron text-center jumbotron-fluid">
+                <hr class="my-5">
+                <h6 class="display-2">Spring Note</h6>
+                <hr class="my-5">
+                <h6 class="display-6 text-muted">Hrabit64의 스프링 노트 ,</h6>
+                <hr class="my-5">
+                <h6 class="display-6 text-muted"><small>백엔드 개발자를 향한 작은 기록장 ;</small></h6>
+                <hr class="my-5">
+            </div>
+        </div>
+    </div>
+    <div class="row my-lg-5 mx-md-5 py-3 px-1">
+        <div class="col-md-6 py-3">
+            <div class="m-lg-2 px-2 py-4 text-center">
+                <h2 class="display-6">
+                    <hr class="my-1">
+                    <hr class="my-5">
+                    <i class="fa-solid fa-clock-rotate-left mr-2 px-3"></i> Recently Posts
+                    <hr class="my-5">
+                    <hr class="my-1">
+                </h2>
+            </div>
+            <div class="list-group list-group-flush py-3" th:each="recently_post : ${recently_posts}">
+                <a th:href="@{/posts/{id}/ (id = ${recently_post.postID})}" class="list-group-item list-group-item-action flex-column align-items-start">
+
+                    <hr class="my-4">
+                    <div class="py-1">
+                        <i class="fa-solid fa-calendar fs-5 px-3"></i>
+                        <p class="fw-light d-inline fs-5" th:text="${#temporals.format(recently_post.createdDateTime, 'yyyy-MM-dd')}"></p>
+
+<!--                        <i class="fa-solid fa-eye fs-5 px-3"></i>-->
+<!--                        <p class="fw-light d-inline fs-5" th:text="${recently_post.view}"></p>-->
+
+                    </div>
+                    <hr class="my-1">
+                    <div class="py-1">
+                        <i class="fa-solid fa-tag fs-5 px-3"></i>
+                        <p class="fw-light d-inline fs-5" th:text="${recently_post.categoryName}"></p>
+                    </div>
+
+                    <hr class="my-2">
+                    <div class="py-1 text-center">
+                        <p class="fw-light d-inline fs-4" th:text="${recently_post.title}"></p>
+                    </div>
+                    <hr class="my-4">
+                </a>
+            </div>
+        </div>
+        <div class="col-md-6 py-3">
+            <div class="m-lg-2 px-2 py-4 text-center">
+                <h2 class = "display-6">
+                    <hr class="my-1">
+                    <hr class="my-5">
+                    <i class="fa-solid fa-thumbs-up mr-2 px-3"></i> Recommended Posts
+                    <hr class="my-5">
+                    <hr class="my-1">
+                </h2>
+            </div>
+            <div class="list-group list-group-flush py-3" th:each="recommend_post : ${recommend_posts}">
+                <a th:href="@{/posts/{id}/ (id = ${recommend_post.postID})}" class="list-group-item list-group-item-action flex-column align-items-start">
+
+                    <hr class="my-4">
+                    <div class="py-1">
+                        <i class="fa-solid fa-calendar fs-5 px-3"></i>
+                        <p class="fw-light d-inline fs-5" th:text="${#temporals.format(recommend_post.createdDateTime, 'yyyy-MM-dd')}"></p>
+
+<!--                        <i class="fa-solid fa-eye fs-5 px-3"></i>-->
+<!--                        <p class="fw-light d-inline fs-5" th:text="${recommend_post.view}"></p>-->
+
+                    </div>
+                    <hr class="my-1">
+                    <div class="py-1">
+                        <i class="fa-solid fa-tag fs-5 px-3"></i>
+                        <p class="fw-light d-inline fs-5" th:text="${recommend_post.categoryName}"></p>
+                    </div>
+
+                    <hr class="my-2">
+                    <div class="py-1 text-center">
+                        <p class="fw-light d-inline fs-4" th:text="${recommend_post.title}"></p>
+                    </div>
+                    <hr class="my-4">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+<th:block th:replace="fragments/footer.html :: footer" />
+</html>

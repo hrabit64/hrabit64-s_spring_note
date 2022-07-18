@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="fragments/header-post-view :: head" />
+<style>
+
+</style>
+<body>
+
+    <div class="container-fluid">
+
+    <div class="row px-5 py-5 mu-5 md-3 mx-md-5">
+
+        <div class="col-md-12">
+            <div class="jumbotron text-center jumbotron-fluid">
+                <hr class="my-5">
+                <h6 class="display-5" th:text="${post.title}"></h6>
+                <hr class="my-5">
+                <i class="fa-solid fa-tag px-3 fs-4"></i> <p class="fs-4 text-muted d-inline" th:text="${post.categoryName} "></p>
+                <hr class="my-5">
+                <div>
+                    <i class="fa-solid fa-calendar fs-4 px-3"></i>
+                    <p  class="fs-4 text-muted d-inline" th:text="${#temporals.format(post.createdDateTime, 'yyyy-MM-dd')}"></p>
+<!--                    <i class="fa-solid fa-eye fs-4 px-3"></i>-->
+<!--                    <p class="fs-4 text-muted d-inline" th:text="${post.view}"></p>-->
+                </div>
+                <hr class="my-5">
+            </div>
+        </div>
+    </div>
+    <div class="row px-4 pd-5 md-lg-5 mx-md-5">
+        <div class="col-12">
+            <article class="markdown-body row px-5 py-5 my-lg-5 mx-md-5">
+                <div th:utext="${post.content}"></div>
+            </article>
+        </div>
+    </div>
+    <hr class="my-5">
+    <div class="row p-5 mu-5">
+
+        <div class="col-6 fs-5">
+            <div class="row">
+
+                <p class="text-secondary"><i class="fa-solid fa-chevron-left"></i>  다음 글</p>
+            </div>
+            <hr class="my-2">
+            <div class="row">
+                <a class="link-success text-decoration-none" th:if="${nextPost != null}" th:text="${nextPost.title}" th:href="@{/posts/{postid}(postid=${nextPost.postID})}"></a>
+                <p th:if="${nextPost == null}" class="text-secondary text-muted">다음 글이 없습니다</p>
+
+            </div>
+
+        </div>
+
+        <div class="col-6 fs-5 ">
+            <div class="row">
+
+                <p class="text-secondary">이전 글 <i class="fa-solid fa-chevron-right"></i></p>
+
+            </div>
+
+            <hr class="my-2">
+
+            <div class="row">
+                <a class="link-success text-decoration-none" th:if="${prevPost != null}" th:text="${prevPost.title}" th:href="@{/posts/{postid}(postid=${prevPost.postID})}"></a>
+                <p th:if="${prevPost == null}" class="text-secondary text-muted">다음 글이 없습니다</p>
+
+            </div>
+
+        </div>
+    </div>
+    <hr class="my-2">
+    <div class="row">
+        <p class="p-3 fs-2 text-secondary text-center"><i class="fa-solid fa-comment"></i> Comments </p>
+    </div>
+    <hr class="my-2">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.6.0/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+        <script src="https://utteranc.es/client.js"
+                repo="hrabit64/hrabit64-s_spring_note"
+                issue-term="pathname"
+                theme="github-dark"
+                crossorigin="anonymous"
+                async>
+        </script>
+</body>
+
+<th:block th:replace="fragments/footer.html :: footer" />
+</html>

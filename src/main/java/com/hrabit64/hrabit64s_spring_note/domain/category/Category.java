@@ -1,20 +1,9 @@
 package com.hrabit64.hrabit64s_spring_note.domain.category;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.hrabit64.hrabit64s_spring_note.domain.posts.Posts;
-import com.hrabit64.hrabit64s_spring_note.service.CategoryService;
-import com.mongodb.lang.NonNull;
 import lombok.*;
-import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.convert.ReadingConverter;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.*;

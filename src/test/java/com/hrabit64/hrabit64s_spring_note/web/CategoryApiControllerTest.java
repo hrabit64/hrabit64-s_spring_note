@@ -9,11 +9,13 @@ import com.hrabit64.hrabit64s_spring_note.domain.posts.PostsRepository;
 import com.hrabit64.hrabit64s_spring_note.service.CategoryService;
 import com.hrabit64.hrabit64s_spring_note.service.PostsService;
 import com.hrabit64.hrabit64s_spring_note.service.SequenceGeneratorService;
-import com.hrabit64.hrabit64s_spring_note.web.dto.*;
+import com.hrabit64.hrabit64s_spring_note.web.dto.category.CategoryAddRequestDto;
+import com.hrabit64.hrabit64s_spring_note.web.dto.category.CategoryResponseDto;
+import com.hrabit64.hrabit64s_spring_note.web.dto.category.CategoryUpdateRequestDto;
+import com.hrabit64.hrabit64s_spring_note.web.dto.posts.PostsResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -27,7 +29,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,6 +93,9 @@ class CategoryApiControllerTest {
 
         categoryRepository.save(testCategory2);
 
+        testCategory1.setCategoryID(categoryService.findByCategoryName(testCategory1.getCategoryName()).getCategoryID());
+        testCategory2.setCategoryID(categoryService.findByCategoryName(testCategory2.getCategoryName()).getCategoryID());
+
         List<CategoryResponseDto> testCase = new ArrayList<CategoryResponseDto>();
         testCase.add(new CategoryResponseDto(testCategory1));
         testCase.add(new CategoryResponseDto(testCategory2));
@@ -111,7 +115,7 @@ class CategoryApiControllerTest {
     }
 
     @Test
-    void findPostsByCategoryName() {
+    void findPostsByCategoryID() {
         //given
         Category testCategory = Category.builder()
                 .categoryName("test")
@@ -152,7 +156,7 @@ class CategoryApiControllerTest {
         logger.debug("given // {} \n {}",testPost1.toString(),testPost2.toString());
 
         //when
-        String url = "http://localhost:" + port + "/api/v1/category/test/posts";
+        String url = "http://localhost:" + port + "/api/v1/category/"+testCategoryID+"/posts";
         logger.debug("when // GET {}",url);
         ResponseEntity<PostsResponseDto[]> responseEntity = testRestTemplate.getForEntity(url, PostsResponseDto[].class);
         List<PostsResponseDto> responseBody = Arrays.asList(responseEntity.getBody());
@@ -163,7 +167,7 @@ class CategoryApiControllerTest {
     }
 
     @Test
-    void findByCategoryName() {
+    void findByCategoryID() {
         //given
         Category testCategory = Category.builder()
                 .categoryName("test")
@@ -171,13 +175,14 @@ class CategoryApiControllerTest {
                 .build();
 
         categoryRepository.save(testCategory);
-
+        String testCategoryID = categoryRepository.findByCategoryName("test").getCategoryID();
+        testCategory.setCategoryID(testCategoryID);
         CategoryResponseDto testCase = new CategoryResponseDto(testCategory);
 
         logger.debug("given // {}",testCategory.toString());
 
         //when
-        String url = "http://localhost:" + port + "/api/v1/category/test";
+        String url = "http://localhost:" + port + "/api/v1/category/" + testCategoryID;
         logger.debug("when // GET {}",url);
         ResponseEntity<CategoryResponseDto> responseEntity = testRestTemplate.getForEntity(url, CategoryResponseDto.class);
         CategoryResponseDto responseBody = responseEntity.getBody();

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="fragments/header-post-write:: head" />
+<body>
+
+    <div class="container-fluid">
+
+        <div class="row px-5 py-5 mu-5 md-3 mx-md-5">
+
+        <div class="col-md-12">
+            <div class="jumbotron text-center jumbotron-fluid">
+                <hr class="my-5">
+                <p class="display-6 d-inline"> Edit Post </p>
+                <hr class="my-5">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <form>
+                <div class="form-group">
+                    <label class="my-3" for="title" >제목</label>
+                    <input th:value="${post.title}" class="form-control" id="title">
+                </div>
+                <hr class="my-5">
+                <div class="form-group">
+                    <label class="my-3" for="category">카테고리</label>
+                    <select class="form-control" id="category">
+                        <option th:selected="${category.categoryName} == ${post.categoryName}" th:each="category : ${categories}" th:value="${category.categoryID}" th:text="${category.categoryName}"></option>
+                    </select>
+                    <button type="button" class="my-3 btn btn-outline-info mb-2" data-bs-toggle="modal" data-bs-target="#ModalForm"><i class="fa-solid fa-plus"></i> 카테고리 추가</button>
+                    <button type="button" class="my-3 btn btn-outline-success mb-2" data-bs-toggle="modal" data-bs-target="#EditModalForm"><i class="fa-solid fa-pen"></i> 카테고리 편집</button>
+                </div>
+                <hr class="my-5">
+                <div class="form-group">
+                    <label class="my-3" for="content">본문</label>
+                    <textarea th:text="${post.content}" class="form-control" id="content" rows="30"></textarea>
+                </div>
+                <button type="submit" class="my-3 btn btn-outline-info mb-2" id="btn-edit">수정</button>
+                <button type="button" class="my-3 btn btn-outline-danger mb-2" data-bs-toggle="modal" data-bs-target="#RemoveModalForm">삭제</button>
+            </form>
+
+        </div>
+    </div>
+
+    </div>
+
+    <div class="modal fade" id="ModalForm" tabindex="-1" aria-labelledby="ModalFormLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">신규 카테고리</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label class="my-3" for="title">카테고리명</label>
+                            <input class="form-control" id="category-title">
+                        </div>
+                        <hr class="my-3">
+                        <div class="form-group">
+                            <label class="my-3" for="content">카테고리 설명</label>
+                            <textarea class="form-control" id="category-index" rows="5"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal" id="btn-category-add">등록</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="EditModalForm" tabindex="-1" aria-labelledby="ModalFormLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">카테고리 편집</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label class="my-3" for="category">카테고리</label>
+                            <select class="form-control" id="edit-category-id">
+                                <option th:selected="${category.categoryName} == ${post.categoryName}" th:each="category : ${categories}" th:value="${category.categoryID}" th:text="${category.categoryName}"></option>
+                            </select>
+                        </div>
+                        <hr class="my-3">
+                        <div class="form-group">
+                            <label class="my-3" for="content">카테고리 이름</label>
+                            <textarea class="form-control" id="edit-category-name" rows="1"></textarea>
+                        </div>
+                        <hr class="my-3">
+                        <div class="form-group">
+                            <label class="my-3" for="content">카테고리 설명</label>
+                            <textarea class="form-control" id="edit-category-index" rows="5"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal" id="btn-category-edit">등록</button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" id="btn-category-remove">삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="RemoveModalForm" tabindex="-1" aria-labelledby="ModalFormLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">정말 삭제하시겠습니까?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" id="btn-remove">삭제하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="post_content" th:value="${post.content}"/>
+    <input type="hidden" id="post_id" th:value="${post.postID}"/>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script th:src ="@{/js/posts.js}"></script>
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.6.0/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</body>
+
+<th:block th:replace="fragments/footer.html :: footer" />
+</html>

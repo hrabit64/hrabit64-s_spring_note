@@ -6,9 +6,12 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+
+import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -29,6 +32,20 @@ public class PostsCustomRepositoryImpl implements PostsCustomRepository {
         return mongoTemplate.findOne(query,Posts.class);
     };
 
+    public List<Posts> findPostsOrderByCreatedTime(){
+        Query query = new Query();
+        query.with(Sort.by(Sort.Order.desc("POST_CREATE_DATE")));
+        query.limit(10);
+
+        return mongoTemplate.find(query,Posts.class);
+    };
+    public List<Posts> findPostsOrderByView(){
+        Query query = new Query();
+        query.with(Sort.by(Sort.Order.desc("POST_VIEW")));
+        query.limit(10);
+
+        return mongoTemplate.find(query,Posts.class);
+    };
 
     /**
      * find category by category id

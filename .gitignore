@@ -40,3 +40,6 @@ out/
 application.properties
 application-oauth.properties
 application-db.properties
+
+#firebase
+firebase_sdk.json

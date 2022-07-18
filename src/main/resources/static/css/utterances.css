@@ -1,0 +1,6 @@
+.utterances {
+    max-width: 90% !important;
+}
+.timeline-comment.current-user .comment-header {
+    background-color: #222222; !important;
+}

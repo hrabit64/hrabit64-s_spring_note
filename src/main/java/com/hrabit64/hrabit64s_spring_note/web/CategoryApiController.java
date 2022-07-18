@@ -1,10 +1,10 @@
 package com.hrabit64.hrabit64s_spring_note.web;
 
 import com.hrabit64.hrabit64s_spring_note.service.CategoryService;
-import com.hrabit64.hrabit64s_spring_note.web.dto.CategoryAddRequestDto;
-import com.hrabit64.hrabit64s_spring_note.web.dto.CategoryPostsResponseDto;
-import com.hrabit64.hrabit64s_spring_note.web.dto.CategoryResponseDto;
-import com.hrabit64.hrabit64s_spring_note.web.dto.CategoryUpdateRequestDto;
+import com.hrabit64.hrabit64s_spring_note.web.dto.category.CategoryAddRequestDto;
+import com.hrabit64.hrabit64s_spring_note.web.dto.category.CategoryPostsResponseDto;
+import com.hrabit64.hrabit64s_spring_note.web.dto.category.CategoryResponseDto;
+import com.hrabit64.hrabit64s_spring_note.web.dto.category.CategoryUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,14 +47,14 @@ public class CategoryApiController {
 
     }
 
-    @GetMapping("{categoryName}/posts")
-    public ResponseEntity<List<CategoryPostsResponseDto>> findPostsByCategoryName(@PathVariable String categoryName){
-        logger.info("GET {} 's posts",categoryName);
+    @GetMapping("{categoryID}/posts")
+    public ResponseEntity<List<CategoryPostsResponseDto>> findPostsByCategoryID(@PathVariable String categoryID){
+        logger.info("GET {} 's posts",categoryID);
         List<CategoryPostsResponseDto> categoryPostsResponseDto;
         try {
-            categoryPostsResponseDto = categoryService.findPostsByCategoryName(categoryName);
+            categoryPostsResponseDto = categoryService.findPostsByCategoryID(categoryID);
         } catch (NullPointerException nullPointerException){
-            logger.info("can't find category...... request category name {}",categoryName);
+            logger.info("can't find category...... request category name {}",categoryID);
             return new ResponseEntity<List<CategoryPostsResponseDto>>(null,null, HttpStatus.NOT_FOUND);
         } catch (Exception e){
             logger.error("INTERNAL SERVER ERROR! {}",e.toString());
@@ -64,14 +64,14 @@ public class CategoryApiController {
         return new ResponseEntity<List<CategoryPostsResponseDto>>(categoryPostsResponseDto,null,HttpStatus.OK);
 
     }
-    @GetMapping("{categoryName}")
-    public ResponseEntity<CategoryResponseDto> findByCategoryName(@PathVariable String categoryName){
-        logger.info("GET {}",categoryName);
+    @GetMapping("{categoryID}")
+    public ResponseEntity<CategoryResponseDto> findByCategoryID(@PathVariable String categoryID){
+        logger.info("GET {}",categoryID);
         CategoryResponseDto categoryResponseDto;
         try {
-            categoryResponseDto = categoryService.findByCategoryName(categoryName);
+            categoryResponseDto = categoryService.findByCategoryID(categoryID);
         } catch (NullPointerException nullPointerException){
-            logger.info("can't find category...... request category name {}",categoryName);
+            logger.info("can't find category...... request category name {}",categoryID);
             return new ResponseEntity<CategoryResponseDto>(null,null, HttpStatus.NOT_FOUND);
         } catch (Exception e){
             logger.error("INTERNAL SERVER ERROR! {}",e.toString());
@@ -127,25 +127,25 @@ public class CategoryApiController {
 
     }
 
-    @DeleteMapping("{categoryName}")
-    public ResponseEntity<String> delCategory (@PathVariable String categoryName) {
-        logger.debug("DELETE {}",categoryName);
+    @DeleteMapping("{categoryID}")
+    public ResponseEntity<String> delCategory (@PathVariable String categoryID) {
+        logger.debug("DELETE {}",categoryID);
 
         try {
-            categoryService.delCategory(categoryName);
+            categoryService.delCategory(categoryID);
         } catch (NullPointerException nullPointerException) {
-            logger.info("can't find category...... request category name {}", categoryName);
+            logger.info("can't find category...... request category name {}", categoryID);
             return new ResponseEntity<String>(null, null, HttpStatus.NOT_FOUND);
         }
         catch (IllegalArgumentException illegalArgumentException) {
-            logger.info("can't delete {}! it has some posts", categoryName);
+            logger.info("can't delete {}! it has some posts", categoryID);
             return new ResponseEntity<String>("Target category has some posts", null, HttpStatus.BAD_REQUEST);
         }
         catch (Exception e){
             logger.error("INTERNAL SERVER ERROR! {}",e.toString());
             return new ResponseEntity<String>(null,null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<String>(categoryName,null, HttpStatus.OK);
+        return new ResponseEntity<String>(categoryID,null, HttpStatus.OK);
 
     }
 
