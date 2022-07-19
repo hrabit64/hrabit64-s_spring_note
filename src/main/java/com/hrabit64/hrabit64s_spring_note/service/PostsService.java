@@ -134,4 +134,16 @@ public class PostsService {
     public void delAllPosts(){
         postsRepository.delAllPosts();
     }
+
+    @Transactional(readOnly = true)
+    public List<PostsResponseDto> searchPost(String content){
+        List<Posts> posts = postsRepository.fullyTextSearch(content);
+        List<PostsResponseDto> returnPosts = new ArrayList<PostsResponseDto>();
+        for (Posts targetPost: posts) {
+            PostsResponseDto indexPost = new PostsResponseDto(targetPost);
+            indexPost.setCategoryName(postsRepository.findCategoryByCategoryID(targetPost.getCategoryID()).getCategoryName());
+            returnPosts.add(indexPost);
+        }
+        return returnPosts;
+    }
 }

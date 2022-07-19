@@ -15,4 +15,5 @@ public interface PostsCustomRepository {
     void delAllPosts();
     List<Posts> findPostsOrderByCreatedTime();
     List<Posts> findPostsOrderByView();
+    List<Posts> fullyTextSearch(String content);
 }

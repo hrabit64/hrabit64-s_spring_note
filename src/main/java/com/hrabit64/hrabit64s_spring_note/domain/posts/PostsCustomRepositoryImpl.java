@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
+import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.data.mongodb.core.query.Update;
 
 import java.util.List;
@@ -138,5 +140,11 @@ public class PostsCustomRepositoryImpl implements PostsCustomRepository {
     }
     public void delAllPosts(){
         mongoTemplate.remove(new Query(),Posts.class);
+    }
+
+    public List<Posts> fullyTextSearch(String content){
+        TextQuery textQuery = TextQuery.queryText(new TextCriteria().matchingAny(content)).sortByScore();
+        List<Posts> result = mongoTemplate.find(textQuery, Posts.class, "posts");
+        return result;
     }
 }

@@ -28,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -189,5 +190,21 @@ public class MVCController {
 
         model.addAttribute("categories",categoryListResponseData);
         return "post-edit";
+    }
+
+    @GetMapping("/posts/search")
+    public String postsSearch(Model model, @RequestParam String content, @PageableDefault(page = 0, size = 20) Pageable pageable){
+        logger.debug("search!");
+        List<PostsResponseDto> postsResponseDtos = postsService.searchPost(content);
+        List<PostsResponseData> postsResponseDatas = new ArrayList<>();
+        for (PostsResponseDto postsResponseDto:postsResponseDtos) {
+            postsResponseDatas.add(new PostsResponseData(postsResponseDto));
+        }
+
+        Page<PostsResponseData> page = (Page<PostsResponseData>) pageMaker.toPage(postsResponseDatas,pageable);
+
+        model.addAttribute("posts",page);
+        model.addAttribute("input",content);
+        return "posts-search";
     }
 }
